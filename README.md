@@ -1,3 +1,5 @@
 # Password Generator
 
 > React
+
+> SCSS

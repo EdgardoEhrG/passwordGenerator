@@ -1,7 +1,7 @@
 import React from "react";
 
 import Header from "./components/header/header.jsx";
-import Display from "./components/display/display.jsx";
+import Display from "./containers/display/display.jsx";
 
 const Main = () => {
   return (

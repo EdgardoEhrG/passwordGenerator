@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 
 import PropTypes from "prop-types";
 
-import "./slider.css";
+import "./slider.scss";
 
 const Slider = (props) => {
   const { step, max, min, value, onChangeValue, defaultLenght } = props;

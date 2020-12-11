@@ -1,21 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 import Container from "../container/container";
-import Button from "../button/button";
+import Button from "../../components/button/button";
+import Tooltip from "../../components/tooltip/tooltip";
 
-import { generatePassword } from "../../utils/helper";
+import { generatePassword, copyToClipBoard } from "../../utils/helper";
 
-import "./display.css";
+import "./display.scss";
 
 const Display = () => {
   const [password, setPassword] = useState("");
   const [range, setRange] = useState();
   const [passwordProps, setPasswordProps] = useState();
+  const [tooltip, setTooltip] = useState(false);
+  const [type, setType] = useState("password");
+
+  const passwordRef = useRef(null);
 
   let pwdDescription = "";
 
+  const selectTagStyle = {
+    backgroundColor: "inherit",
+    color: "#506175",
+    width: "20%",
+    heigth: "auto",
+    marginLeft: "-4px",
+  };
+
   const generateNewPassword = () => {
-    const pwd = generatePassword(passwordProps, range);
+    const pwd =
+      range > 3
+        ? generatePassword(passwordProps, range)
+        : generatePassword(passwordProps, 3);
     setPassword(pwd);
   };
 
@@ -35,8 +51,33 @@ const Display = () => {
     }
   };
 
+  const copyClipBoard = (e) => {
+    e.preventDefault();
+    copyToClipBoard(passwordRef.current);
+    setTooltip(true);
+    setTimeout(() => {
+      setTooltip(false);
+    }, 1000);
+  };
+
+  const onSelectTag = (e) => {
+    setType(e.target.value);
+  };
+
   return (
     <>
+      <div>
+        <select
+          className="form-control form-control-sm"
+          name="type"
+          value={type}
+          onChange={onSelectTag}
+          style={selectTagStyle}
+        >
+          <option value="password">Password</option>
+          <option value="pin">PIN</option>
+        </select>
+      </div>
       <div className="row">
         <div
           className="col-12 password-display-container"
@@ -45,6 +86,7 @@ const Display = () => {
           <div style={{ width: "100%" }}>
             <div className="password-display">
               <input
+                ref={passwordRef}
                 type="text"
                 className="password-display-input"
                 value={password}
@@ -64,19 +106,30 @@ const Display = () => {
             </div>
           </div>
           <div className="password-display-icons">
-            <Button myClassName={"copy-btn"} iconClass={"far fa-copy"} />
+            <Button
+              myClassName={"copy-btn"}
+              iconClass={"far fa-copy"}
+              handleClick={(e) => copyClipBoard(e)}
+            />
             <Button
               myClassName={"generate-btn"}
               iconClass={"fas fa-sync-alt"}
               handleClick={generateNewPassword}
             />
+            <Tooltip
+              message="Copied"
+              position="left"
+              displayTooltip={tooltip}
+            />
           </div>
         </div>
       </div>
       <Container
+        type={type}
         setPassword={setPassword}
         setRange={setRange}
         setPasswordProps={setPasswordProps}
+        passwordRef={passwordRef}
       />
     </>
   );
