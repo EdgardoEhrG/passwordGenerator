@@ -2,4 +2,9 @@
 
 > React
 
-> SCSS
+> Sass (SCSS)
+
+## Useful elements
+
+- [ ] Range component
+- [ ] Symbol generators
